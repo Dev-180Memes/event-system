@@ -59,7 +59,7 @@ const Events = () => {
           <div className="flex gap-4 ">
             <div className="flex flex-col gap-1 w-full">
               <h2 className="font-semibold text-3xl text-gray-900">Events</h2>
-              <p className="font-normal text-base text-gray-600">Monitor key metrics and stay on top of your event performance.</p>
+              <p className="font-normal text-base text-gray-600 text-nowrap">Monitor key metrics and stay on top of your event performance.</p>
             </div>
             <div className="flex flex-row gap-3 w-full">
               <div className="w-full rounded-lg border h-fit py-2.5 px-3.5 border-gray-300 shadow flex gap-2 items-center">

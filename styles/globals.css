@@ -5,3 +5,37 @@
 .invisible-content {
     visibility: hidden;
 }
+
+.custom-radio {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+    background-color: #f1f1f1;
+    border-radius: 50%;
+    border: 2px solid #d1d5db;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+}
+  
+.custom-radio:checked {
+    border-color: #8b5cf6;
+    background-color: #fff;
+}
+  
+.custom-radio:checked::before {
+    content: "";
+    display: block;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background-color: #8b5cf6; /* Customize this color */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+  
