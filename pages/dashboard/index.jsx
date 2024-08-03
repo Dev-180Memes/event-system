@@ -1,6 +1,7 @@
 import React from 'react';
 import Layout from '@/components/Dashboard/Layout';
 import Card from '@/components/Card';
+import withAuth from '@/components/hoc/withAuth';
 
 const Dashboard = () => {
   return (
@@ -41,4 +42,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default withAuth(Dashboard);
