@@ -207,10 +207,12 @@ const View = () => {
                         // Loop through items array in item and check the type, if one of them is paid then the order is paid, else it is free
                         item.items.some(item => item.type === 'paid') ? 'Paid' : 'Free'
                       }</td>
-                      <td className="py-3 px-6 font-normal text-sm text-gray-600 text-left max-w-[120px]">{item.items.length} tickets</td>
-                      <td className="py-3 px-6 font-normal text-sm text-gray-600 text-left max-w-[140px]">{
-                        // loop through the items in the order and sum the total price of each item
-                        item.items[0].totalPrice
+                      <td className="py-3 px-6 font-normal text-sm text-gray-600 text-left max-w-[120px]">{
+                        // Check the total quantity of tickets in the items array
+                        item.items.reduce((acc, item) => acc + item.quantity, 0)
+                      } tickets</td>
+                      <td className="py-3 px-6 font-normal text-sm text-gray-600 text-left max-w-[140px]">₦ {
+                        item.total
                       }</td>
                       <td className="py-3 px-6 font-normal text-sm text-gray-600 text-left max-w-[200px]">{formatDate(item.purchaseDate)}</td>
                       <td className="py-3 px-6 font-normal text-sm text-gray-600 text-left max-w-[140px] flex items-center justify-center">

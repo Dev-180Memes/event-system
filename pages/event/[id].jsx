@@ -8,6 +8,7 @@ import axios from 'axios';
 import formatDate from '@/utils/formatDate';
 import Link from 'next/link';
 import Checkout from '@/components/Checkout';
+import { set } from 'mongoose';
 
 function capitalizeFirstLetter(string) {
   if (!string) return string;
@@ -19,6 +20,7 @@ const Event = () => {
   const [ticketCounts, setTicketCounts] = useState({});
   const [totalReserved, setTotalReserved] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [subtotal, setSubtotal] = useState(0);
 
   const router = useRouter();
   const { id } = router.query;
@@ -51,8 +53,12 @@ const Event = () => {
   const handleIncreaseTicketCount = (ticketType) => {
     if (totalReserved < event.purchaseLimit) {
       setTicketCounts(prevCounts => {
-        const newCounts = { ...prevCounts, [ticketType]: (prevCounts[ticketType] || 0) + 1 };
+        const newCounts = { ...prevCounts, [ticketType]: prevCounts[ticketType] ? prevCounts[ticketType] + 1 : 1 };
         setTotalReserved(Object.values(newCounts).reduce((acc, count) => acc + count, 0));
+        setSubtotal(Object.keys(newCounts).reduce((acc, ticketType) => {
+          const ticket = event.tickets.find(t => t.name === ticketType);
+          return acc + (ticket.price * newCounts[ticketType]);
+        }, 0));
         return newCounts;
       });
     } else {
@@ -65,6 +71,10 @@ const Event = () => {
       if (prevCounts[ticketType] > 0) {
         const newCounts = { ...prevCounts, [ticketType]: prevCounts[ticketType] - 1 };
         setTotalReserved(Object.values(newCounts).reduce((acc, count) => acc + count, 0));
+        setSubtotal(Object.keys(newCounts).reduce((acc, ticketType) => {
+          const ticket = event.tickets.find(t => t.name === ticketType);
+          return acc + (ticket.price * newCounts[ticketType]);
+        }, 0));
         return newCounts;
       }
       return prevCounts;
@@ -86,11 +96,6 @@ const Event = () => {
       <p className="font-semibold text-xl text-gray-900">Loading...</p>
     </div>
   );
-
-  const subtotal = Object.entries(ticketCounts).reduce((acc, [ticketName, count]) => {
-    const ticketPrice = event.tickets.find(ticket => ticket.name === ticketName).price;
-    return acc + count * ticketPrice;
-  }, 0);
 
   return (
     <div className='w-full px-20 min-h-screen'>
