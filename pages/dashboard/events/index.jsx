@@ -1,56 +1,92 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '@/components/Dashboard/Layout';
 import Link from 'next/link';
+import withAuth from '@/components/hoc/withAuth';
+import axios from 'axios';
+import formatDate from '@/utils/formatDate';
+import decodeToken from '@/utils/decodeToken';
+
+function capitalizeFirstLetter(string) {
+  if (!string) return string;
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 const Events = () => {
   const [openRowIndex, setOpenRowIndex] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [activeTab, setActiveTab] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [eventsPerPage] = useState(4);
 
-  const data = [
-    {
-      _id: '1',
-      name: 'Untitled Designers Conference 2024',
-      category: 'Arts & Culture',
-      type: 'Free',
-      date: 'Jan 13, 2022',
-      time: '11:00 AM',
-    },
-    {
-      _id: '2',
-      name: 'Untitled Designers Conference 2024',
-      category: 'Arts & Culture',
-      type: 'Free',
-      date: 'Jan 13, 2022',
-      time: '11:00 AM',
-    },
-    {
-      _id: '3',
-      name: 'Untitled Designers Conference 2024',
-      category: 'Arts & Culture',
-      type: 'Free',
-      date: 'Jan 13, 2022',
-      time: '11:00 AM',
-    },
-    {
-      _id: '4',
-      name: 'Untitled Designers Conference 2024',
-      category: 'Arts & Culture',
-      type: 'Free',
-      date: 'Jan 13, 2022',
-      time: '11:00 AM',
-    }
-  ]
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const decodedToken = decodeToken(token);
+        const userId = decodedToken.userId;
+
+        const response = await axios.get(`/api/events/user/${userId}`);
+        const fetchedEvents = response.data.map(event => ({
+          ...event,
+          formattedDate: formatDate(event.startdate)
+        }));
+
+        setEvents(fetchedEvents);
+        setFilteredEvents(fetchedEvents);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   const toggleDropdown = (index) => {
     setOpenRowIndex(openRowIndex === index ? null : index);
-  }
+  };
 
   const handleDelete = (index) => {
     setDeleteId(index);
     setOpenRowIndex(null);
     setShowDeleteModal(true);
-  }
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    filterEvents(tab);
+    setCurrentPage(1);
+  };
+
+  const filterEvents = (tab) => {
+    const now = new Date();
+    let filtered = events;
+
+    if (tab === 'upcoming') {
+      filtered = events.filter(event => new Date(event.startdate) >= now);
+    } else if (tab === 'past') {
+      filtered = events.filter(event => new Date(event.startdate) < now);
+    }
+
+    setFilteredEvents(filtered);
+  };
+
+  // Pagination Logic
+  const indexOfLastEvent = currentPage * eventsPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+  const currentEvents = filteredEvents.slice(indexOfFirstEvent, indexOfLastEvent);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  if (!events.length) return (
+    <Layout>
+      <div className="w-full flex items-center justify-center h-[80vh]">
+        <p className="font-semibold text-xl text-gray-900">Loading...</p>
+      </div>
+    </Layout>
+  );
 
   return (
     <Layout>
@@ -78,38 +114,36 @@ const Events = () => {
           </div>
           <div className="border-b border-gray-200">
             <div className="flex gap-4">
-              <div className="border-b-2 pt-[1px] px-1 pb-[11px] border-violet-700">
-                <p className="font-semibold text-sm text-violet-700">All events</p>
+              <div className={`pt-[1px] px-1 cursor-pointer pb-[11px] ${activeTab === 'all' ? 'border-violet-700 border-b-2' : ''}`}>
+                <p className={`font-semibold text-sm ${activeTab === 'all' ? 'text-violet-700' : 'text-gray-500'}`} onClick={() => handleTabChange('all')}>All events</p>
               </div>
-              <div className="pt-[1px] px-1 pb-[11px]">
-                <p className="font-semibold text-sm text-gray-500">Upcoming events</p>
+              <div className={`pt-[1px] px-1 cursor-pointer pb-[11px] ${activeTab === 'upcoming' ? 'border-violet-700 border-b-2' : ''}`}>
+                <p className={`font-semibold text-sm ${activeTab === 'upcoming' ? 'text-violet-700' : 'text-gray-500'}`} onClick={() => handleTabChange('upcoming')}>Upcoming events</p>
               </div>
-              <div className="pt-[1px] px-1 pb-[11px]">
-                <p className="font-semibold text-sm text-gray-500">Past events</p>
+              <div className={`pt-[1px] px-1 cursor-pointer pb-[11px] ${activeTab === 'past' ? 'border-violet-700 border-b-2' : ''}`}>
+                <p className={`font-semibold text-sm ${activeTab === 'past' ? 'text-violet-700' : 'text-gray-500'}`} onClick={() => handleTabChange('past')}>Past events</p>
               </div>
             </div>
           </div>
         </div>
         <div className="w-full rounded-xl border border-gray-200 shadows">
           <table className="w-full">
-            <thead className=''>
+            <thead>
               <tr className='border-b border-gray-200'>
                 <th className='max-w-80 py-3 px-6  bg-none font-medium text-xs text-gray-600 text-left'>Name</th>
                 <th className="max-w-44 py-3 px-6  bg-gray-50 font-medium text-xs text-gray-600 text-left">Category</th>
-                <th className="max-w-36 py-3 px-6  bg-gray-50 font-medium text-xs text-gray-600 text-left">Type</th>
                 <th className="max-w-36 py-3 px-6  bg-gray-50 font-medium text-xs text-gray-600 text-left">Date</th>
                 <th className="max-w-36 py-3 px-6  bg-gray-50 font-medium text-xs text-gray-600 text-left">Time</th>
                 <th className="max-w-16 py-3 px-6  bg-gray-50 invisible-content font-medium text-xs text-gray-600 text-left">Action</th>
               </tr>
             </thead>
             <tbody>
-              {data.map((event, index) => (
-                <tr className="border-b border-gray-200" key={index}>
+              {currentEvents.map((event, index) => (
+                <tr className="border-b border-gray-200" key={event._id}>
                   <td className="max-w-80 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.name}</td>
-                  <td className="max-w-44 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.category}</td>
-                  <td className="max-w-36 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.type}</td>
-                  <td className="max-w-36 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.date}</td>
-                  <td className="max-w-36 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.time}</td>
+                  <td className="max-w-44 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{capitalizeFirstLetter(event.category)}</td>
+                  <td className="max-w-36 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.formattedDate}</td>
+                  <td className="max-w-36 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.starttime}</td>
                   <td className="max-w-16 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">
                     <button className="flex items-center gap-2" onClick={() => toggleDropdown(index)}>
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -141,12 +175,22 @@ const Events = () => {
             </tbody>
           </table>
           <div className="w-full flex justify-between items-center border-t border-gray-200 pt-3 px-6 pb-4">
-            <p className="font-medium text-sm text-gray-700">Page 1 of 10</p>
+            <p className="font-medium text-sm text-gray-700">
+              Page {currentPage} of {Math.ceil(filteredEvents.length / eventsPerPage)}
+            </p>
             <div className="flex gap-3">
-              <button className="rounded-lg border py-2 px-3.5 border-gray-300 shadow font-semibold text-sm text-gray-700">
+              <button
+                className="rounded-lg border py-2 px-3.5 border-gray-300 shadow font-semibold text-sm text-gray-700"
+                onClick={() => paginate(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
                 Previous
               </button>
-              <button className="rounded-lg border py-2 px-3.5 border-gray-300 shadow font-semibold text-sm text-gray-700">
+              <button
+                className="rounded-lg border py-2 px-3.5 border-gray-300 shadow font-semibold text-sm text-gray-700"
+                onClick={() => paginate(currentPage + 1)}
+                disabled={currentPage === Math.ceil(filteredEvents.length / eventsPerPage)}
+              >
                 Next
               </button>
             </div>
@@ -210,4 +254,4 @@ const Events = () => {
   )
 }
 
-export default Events
+export default withAuth(Events);

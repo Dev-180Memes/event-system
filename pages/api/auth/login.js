@@ -6,6 +6,10 @@ import jwt from "jsonwebtoken";
 export default async (req, res) => {
   await connectDb();
 
+  if (req.method !== "POST") {
+    return res.status(405).send("Request method not allowed.");
+  }
+
   const { email, password } = req.body;
   try {
     if (!email || !password) {
