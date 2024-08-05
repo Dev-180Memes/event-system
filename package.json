@@ -9,17 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroicons/react": "^2.1.5",
     "axios": "^1.7.3",
     "bcryptjs": "^2.4.3",
     "flatpickr": "^4.6.13",
     "jsonwebtoken": "^9.0.2",
+    "moment": "^2.30.1",
     "mongoose": "^8.5.2",
     "next": "14.2.5",
     "nodemailer": "^6.9.14",
     "react": "^18",
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
-    "react-hot-toast": "^2.4.1"
+    "react-hot-toast": "^2.4.1",
+    "react-icons": "^5.2.1",
+    "recharts": "^2.12.7"
   },
   "devDependencies": {
     "postcss": "^8",

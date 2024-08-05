@@ -8,36 +8,40 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
-    <div className="bg-white px-20">
+    <div className="bg-white md:px-20">
       <Navbar />
-      <div className="pt-24 flex flex-col gap-16 items-center">
-        <div className="flex flex-col gap-6 px-8 items-center">
-          <h2 className="font-semibold text-center text-6xl text-gray-900">
+      <div className="pt-24 flex flex-col gap-16 items-center px-4 md:px-8">
+        <div className="flex flex-col gap-6 items-center text-center max-w-3xl">
+          <h2 className="font-semibold text-4xl md:text-6xl text-gray-900 leading-snug">
             Innovative Event Management and Ticketing Made Easy
           </h2>
-          <p className="font-normal text-xl text-center text-gray-600 w-2/3">Efficiently plan, promote, and execute your events while maximizing ticket sales with our platform designed for seamless event management.</p>
+          <p className="font-normal text-lg md:text-xl text-gray-600">
+            Efficiently plan, promote, and execute your events while maximizing ticket sales with our platform designed for seamless event management.
+          </p>
         </div>
-        <div className="pb-24 px-8 flex items-center">
+        <div className="pb-24 w-full flex justify-center">
           <Image 
             src="/hero.png"
             width={1024}
             height={682}
             alt="Hero Image"
-            className="rounded-lg"
+            className="rounded-lg w-full max-w-4xl"
           />
         </div>
       </div>
-      <div className="py-24 flex flex-col gap-16 w-full">
-        <div className="px-8 flex flex-col gap-5">
-          <div className="flex flex-col gap-3">
-            <p className="font-semibold text-base text-violet-700">Features</p>
-            <h3 className="font-semibold text-3xl text-gray-900">Features That Drive Event Excellence</h3>
-          </div>
-          <p className="font-normal text-xl text-gray-600">Enhance your events with features that make planning and execution easier.</p>
+      <div className="py-24 flex flex-col gap-16 w-full px-4 md:px-8">
+        <div className="flex flex-col gap-5 max-w-3xl mx-auto text-center">
+          <p className="font-semibold text-base text-violet-700">Features</p>
+          <h3 className="font-semibold text-2xl md:text-3xl text-gray-900">
+            Features That Drive Event Excellence
+          </h3>
+          <p className="font-normal text-lg md:text-xl text-gray-600">
+            Enhance your events with features that make planning and execution easier.
+          </p>
         </div>
-        <div className="px-8 flex gap-16">
-          <div className="flex flex-col w-2/3 gap-12">
-            <div className="flex gap-8 ">
+        <div className="flex flex-col lg:flex-row gap-16">
+          <div className="flex flex-col lg:w-2/3 gap-12">
+            <div className="flex flex-col md:flex-row gap-8 ">
               <div className="flex flex-col gap-5 w-full">
                 <div className="w-12 h-12 rounded-full border-8 border-violet-50 bg-violet-100 flex items-center justify-center">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5 text-violet-600">
@@ -61,7 +65,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="flex gap-8 ">
+            <div className="flex flex-col md:flex-row gap-8 ">
               <div className="flex flex-col gap-5 w-full">
                 <div className="w-12 h-12 rounded-full border-8 border-violet-50 bg-violet-100 flex items-center justify-center">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5 text-violet-600">
@@ -91,25 +95,25 @@ export default function Home() {
             width={1024}
             height={682}
             alt="Mockup Image"
-            className="absolute w-1/3 right-0 h-96"
+            className="w-full lg:w-1/3 h-96 object-cover hidden md:inline-block"
           />
         </div>
       </div>
-      <div className="flex py-24">
-        <div className="px-8 flex flex-col gap-8 items-center">
-          <p className="font-medium text-5xl text-center text-gray-900">Working with Epicurious has been a game-changer for us. The platform streamlined our event planning, and the support team was outstanding. We’re excited to use it for all our future events.</p>
+      <div className="flex flex-col lg:flex-row py-24 gap-8 lg:gap-0 px-4 md:px-8 items-center lg:items-start">
+        <div className="flex flex-col gap-8 items-center text-center lg:text-left lg:items-start">
+          <p className="font-medium text-2xl md:text-5xl text-gray-900">Working with Epicurious has been a game-changer for us. The platform streamlined our event planning, and the support team was outstanding. We’re excited to use it for all our future events.</p>
           <div className="flex flex-col gap-1">
-            <p className="font-semibold text-lg text-center text-gray-900">Amélie Laurent</p>
-            <p className="font-normal text-base text-center text-gray-600">Product Manager, Sisyphus</p>
+            <p className="font-semibold text-lg text-gray-900">Amélie Laurent</p>
+            <p className="font-normal text-base text-gray-600">Product Manager, Sisyphus</p>
           </div>
         </div>
       </div>
-      <div className="w-full flex items-center">
-        <div className="py-16 px-8 w-1/2 gap-10 flex flex-col">
-          <h3 className="font-semibold text-5xl text-gray-900">
+      <div className="w-full flex flex-col lg:flex-row items-center py-24 px-4 md:px-8 gap-10">
+        <div className="lg:w-1/2 flex flex-col gap-10">
+          <h3 className="font-semibold text-3xl md:text-5xl text-gray-900 text-center lg:text-left">
             Sign up to start managing & selling tickets for your events effortlessly!
           </h3>
-          <Link href={'/auth/signup'} className="rounded-lg border py-3 px-5 bg-violet-600 border-violet-600 shadow font-semibold text-base text-white w-fit h-fit">
+          <Link href={'/auth/signup'} className="rounded-lg border py-3 px-5 bg-violet-600 border-violet-600 shadow font-semibold text-base text-white w-full lg:w-fit text-center lg:text-left">
             Sign Up
           </Link>
         </div>
@@ -118,21 +122,21 @@ export default function Home() {
           width={1024}
           height={682}
           alt="Image"
-          className="w-1/2 absolute right-0"
+          className="w-full lg:w-1/2 object-cover"
         />
       </div>
-      <div className="py-24 w-full">
-        <div className="px-8 flex gap-8 w-full">
-          <div className="flex flex-col gap-5">
-            <h2 className="font-semibold text-4xl text-gray-900">Sign up for our newsletter</h2>
-            <p className="font-normal text-xl text-gray-600 text-nowrap">Be the first to know about releases and industry news and insights.</p>
+      <div className="py-24 w-full px-4 md:px-8">
+        <div className="flex flex-col lg:flex-row gap-8 w-full">
+          <div className="flex flex-col gap-5 w-full lg:w-1/2">
+            <h2 className="font-semibold text-2xl md:text-4xl text-gray-900">Sign up for our newsletter</h2>
+            <p className="font-normal text-base md:text-xl text-gray-600">Be the first to know about releases and industry news and insights.</p>
           </div>
-          <div className="flex gap-4 w-full">
-            <div className="flex flex-col gap-1 w-full">
+          <div className="flex flex-col lg:flex-row gap-4 w-full lg:w-1/2 items-start">
+            <div className="flex flex-col gap-1 w-full lg:w-3/4">
               <input type="text" className="rounded-lg border py-3 px-3.5 bg-white border-gray-300 shadow font-normal text-base text-gray-500 w-full" placeholder="Enter your email" />
-              <p className="font-normal text-xs text-gray-600">We care about your data in our <Link href={''} className="underline">privacy policy</Link>.</p>
+              <p className="font-normal text-xs text-gray-600">We care about your data in our <Link href={'/privacy-policy'} className="underline">privacy policy</Link>.</p>
             </div>
-            <button className="rounded-lg border py-3 px-5 bg-violet-600 border-violet-600 shadow font-semibold text-base text-white w-fit h-fit">
+            <button className="rounded-lg border py-3 px-5 bg-violet-600 border-violet-600 shadow font-semibold text-base text-white w-full lg:w-fit">
               Subscribe
             </button>
           </div>

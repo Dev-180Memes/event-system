@@ -36,7 +36,9 @@ const Login = () => {
     <div className='w-full h-[100vh] flex justify-center'>
       <div className='max-w-96 mt-14 flex flex-col gap-8'>
         <div className="flex flex-col items-center gap-6">
-          <Image src='/logo.png' width={189} height={48} alt='logo' />
+          <Link href={'/'}>
+            <Image src='/logo.png' width={189} height={48} alt='logo' />
+          </Link>
           <div className="flex flex-col gap-3 items-center">
             <h1 className='font-semibold text-3xl text-gray-900'>Log in to your account</h1>
             <p className="font-normal text-base text-gray-600">Welcome back! Please enter your details.</p>

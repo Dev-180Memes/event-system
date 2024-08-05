@@ -8,7 +8,6 @@ import axios from 'axios';
 import formatDate from '@/utils/formatDate';
 import Link from 'next/link';
 import Checkout from '@/components/Checkout';
-import { set } from 'mongoose';
 
 function capitalizeFirstLetter(string) {
   if (!string) return string;
@@ -98,18 +97,18 @@ const Event = () => {
   );
 
   return (
-    <div className='w-full px-20 min-h-screen'>
+    <div className='w-full min-h-screen'>
       <Navbar />
-      <div className="border-b border-b-gray-200">
+      <div className="border-b border-b-gray-200 px-4 md:px-20">
         <div className="py-12 flex flex-col gap-8">
-          <div className="px-8 flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
             <div className="rounded-3xl border px-2 pt-3 pb-2.5 gap-1.5 bg-blend-multiply bg-violet-50 border-violet-200 flex items-center w-fit h-fit">
               <div className="w-2 h-2 rounded-full bg-violet-500"/>
               <p className="font-medium text-sm text-center text-violet-700">{capitalizeFirstLetter(event.category)}</p>
             </div>
             <h2 className="font-semibold text-3xl text-gray-900">{event.name}</h2>
           </div>
-          <div className="flex flex-col gap-8 px-8">
+          <div className="flex flex-col gap-8">
             <Image 
               src={event.imageurl}
               width={400}
@@ -117,9 +116,9 @@ const Event = () => {
               alt="Event Image"
               className='w-full h-80 object-cover rounded-lg'
             />
-            <div className="flex justify-between w-full gap-24">
-              <div className="flex justify-between w-full">
-                <div className="flex flex-col gap-3">
+            <div className="flex flex-col md:flex-row justify-between w-full gap-8 md:gap-24">
+              <div className="flex md:flex-rol flex-col gap-3 justify-between w-full">
+                <div className="flex flex-col md:gap-3">
                   <p className="font-semibold text-sm text-violet-600">Organized by</p>
                   <p className="font-medium text-lg text-gray-900">
                     {event.createdBy.name.length > 10
@@ -127,15 +126,15 @@ const Event = () => {
                       : event.createdBy.name}
                   </p>
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col md:gap-3">
                   <p className="font-semibold text-sm text-violet-600">Date</p>
                   <p className="font-medium text-lg text-gray-900">{formatDate(event.startdate)}</p>
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col md:gap-3">
                   <p className="font-semibold text-sm text-violet-600">Time</p>
                   <p className="font-medium text-lg text-gray-900">{event.starttime} - {event.endtime}</p>
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col md:gap-3">
                   <p className="font-semibold text-sm text-violet-600">Venue</p>
                   <p className="font-medium text-lg text-gray-900">
                     {event.location.length > 20 
@@ -183,15 +182,15 @@ const Event = () => {
             </div>
           </div>
         </div>
-        <div className="w-full flex justify-between gap-20 pb-12 px-8">
-          <div className="flex flex-col gap-5">
+        <div className="w-full flex flex-col md:flex-row justify-between gap-8 md:gap-20 pb-12">
+          <div className="flex flex-col gap-5 w-full md:w-1/2">
             <h3 className="font-semibold text-3xl text-gray-900">About This Event</h3>
             <p className="font-normal text-lg text-gray-600">
               {event.description}
             </p>
           </div>
-          <div className="rounded-xl py-6 px-5 gap-8 bg-gray-50 h-fit flex flex-col">
-            <div className="flex flex-col gap-5 w-80">
+          <div className="rounded-xl py-6 px-5 gap-8 bg-gray-50 h-fit flex flex-col w-full md:w-1/2">
+            <div className="flex flex-col gap-5 w-full">
               <div className="flex flex-col gap-1">
                 <p className="font-semibold text-lg text-gray-900">Ticket</p>
                 <p className="font-normal text-sm text-gray-500">Your ticket type determines what you have access to</p>

@@ -1,9 +1,68 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '@/components/Dashboard/Layout';
 import Card from '@/components/Card';
 import withAuth from '@/components/hoc/withAuth';
+import decodeToken from '@/utils/decodeToken';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import TicketsSoldChart from '@/components/TicketsSoldChart';
+
+function formatNumber(value) {
+  if (parseInt(value) >= 1000000) {
+    return (parseInt(value) / 1000000).toFixed(1) + 'M'; // Converts to millions
+  } else if (parseInt(value) >= 1000) {
+    return (parseInt(value) / 1000).toFixed(1) + 'K'; // Converts to thousands
+  } else {
+    return parseInt(value).toString(); // Returns the number as is if it's less than 1000
+  }
+}
 
 const Dashboard = () => {
+  const [events, setEvents] = useState([]);
+  const [totalTicketsSold, setTotalTicketsSold] = useState(0);
+  const [thisMonthTicketsSold, setThisMonthTicketsSold] = useState(0);
+  const [ticketSoldPercentage, setTicketSoldPercentage] = useState(0);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const { userId } = decodeToken(token);
+
+      const fetchEvents = async () => {
+        try {
+          const response = await axios.get(`/api/events/user/${userId}`);
+          setEvents(response.data);
+        } catch (error) {
+          console.error(error); 
+          toast.error('Error fetching events');
+        }
+      }
+
+      const fetchDashDetails = async () => {
+        try {
+          const response = await axios.get(`/api/tickets/total`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          console.log(response.data)
+          setTotalTicketsSold(response.data.totalTicketsSold);
+          setThisMonthTicketsSold(response.data.thisMonthTicketsSold)
+          setTicketSoldPercentage(parseInt(response.data.percentIncrease))
+        } catch (error) {
+          console.error(error);
+          toast.error('Error fetching dashboard details');
+        }
+      };
+
+      fetchEvents();
+
+      fetchDashDetails();
+    }
+
+    
+  }, []);
+
   return (
     <Layout>
       <div className="flex flex-col w-full gap-8">
@@ -15,18 +74,17 @@ const Dashboard = () => {
           <Card 
             icon={'calendar'}
             heading={'Total Events'}
-            value={'39'}
-            increase={'100'}
+            value={formatNumber(events.length)}
           />
           <Card 
             heading={'Total tickets sold'}
-            value={'26.4K'}
-            increase={'100'}
+            value={formatNumber(totalTicketsSold)}
+            increase={ticketSoldPercentage}
           />
           <Card 
             heading={"Month's Tickets Sold"}
-            value={'1.78K'}
-            increase={'100'}
+            value={formatNumber(thisMonthTicketsSold)}
+            increase={ticketSoldPercentage}
           />
         </div>
         <div className="flex flex-col w-full gap-6">
@@ -34,7 +92,7 @@ const Dashboard = () => {
             <h3 className="font-semibold text-lg text-gray-900">Tickets sold over time</h3>
           </div>
           <div className="w-full">
-            TODO: Bar Chart showing Ticket Sales
+            <TicketsSoldChart />
           </div>
         </div>
       </div>

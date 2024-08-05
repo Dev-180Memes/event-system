@@ -1,6 +1,5 @@
 import connectDb from '@/utils/connectDb';
 import Event from '@/models/event.model';
-import withAuth from '@/middlewares/withAuth';
 
 export default async (req, res) => {
   const { userId } = req.query;

@@ -1,10 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
 const Sidebar = () => {
+  const [userDetail, setUserDetail] = useState(null);
+  
   const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    const fetchUser = async () => {
+      if (token) {
+        try {
+          const res = await axios.get('/api/fetchUser', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setUserDetail(res.data);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+
+    fetchUser();
+  }, []);
 
   const isActive = (path) => router.pathname === path;
 
@@ -15,12 +39,14 @@ const Sidebar = () => {
     <div className='w-[280px] bg-violet-700 flex flex-col justify-between h-screen fixed'>
       <div className="pt-8 gap-8 flex flex-col">
         <div className="pl-5 pr-6">
-          <Image 
-            src={'/logo-white.png'}
-            alt='logo'
-            width={150}
-            height={40}
-          />
+          <Link href={'/'}>
+            <Image 
+              src={'/logo-white.png'}
+              alt='logo'
+              width={150}
+              height={40}
+            />
+          </Link>
         </div>
         <div className="flex flex-col">
           <Link href={'/dashboard'} className={`flex flex-row py-2 px-7 ${isActive('/dashboard') ? 'bg-violet-800' : 'bg-violet-700'} gap-3 text-white`}>
@@ -50,11 +76,12 @@ const Sidebar = () => {
         <div className="w-full border-t pt-6 pb-0 pl-2 border-violet-600 gap-11 flex">
           <div className="flex gap-3 items-center">
             <div className="w-10 h-10 rounded-full bg-gray-100 font-semibold text-base text-gray-600 flex items-center justify-center">
-              OR
+              {/* Get the first letter of the name */}
+              {userDetail?.name[0]}
             </div>
             <div className="">
-              <p className="text-white font-semibold text-sm">Olivia Rhiye</p>
-              <p className="text-violet-200 font-normal text-sm">olivia@gmail.com</p>
+              <p className="text-white font-semibold text-sm">{userDetail?.name.substring(0, 10)}...</p>
+              <p className="text-violet-200 font-normal text-sm">{userDetail?.email.substring(0, 10)}...</p>
             </div>
           </div>
           <button className='text-white'>
