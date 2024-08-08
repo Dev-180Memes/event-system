@@ -117,7 +117,7 @@ const Event = () => {
               className='w-full h-80 object-cover rounded-lg'
             />
             <div className="flex flex-col md:flex-row justify-between w-full gap-8 md:gap-24">
-              <div className="flex md:flex-rol flex-col gap-3 justify-between w-full">
+              <div className="flex sm:flex-rol flex-col gap-3 justify-between w-full">
                 <div className="flex flex-col md:gap-3">
                   <p className="font-semibold text-sm text-violet-600">Organized by</p>
                   <p className="font-medium text-lg text-gray-900">

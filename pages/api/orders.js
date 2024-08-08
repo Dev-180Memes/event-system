@@ -59,7 +59,23 @@ export default async function handler(req, res) {
         from: process.env.EMAIL_USER,
         to: email,
         subject: 'Order Confirmation',
-        text: `Dear ${name},\n\nThank you for your order!\n\nHere are the details:\n\n${orderItems.map(item => `${item.quantity} x ${item.name} (${item.type}) - ₦${item.totalPrice}`).join('\n')}\n\nTotal: ₦${subtotal}\n\nBest regards,\nEvent Team`,
+        // Send ticket details in the email (ID, name, type, price, quantity, total price) with a message in html and css format
+        html: `
+          <div style="background-color: #f9f9f9; padding: 20px; font-family: Arial, sans-serif;">
+            <h1 style="color: #333;">Order Confirmation</h1>
+            <p>Hi ${name},</p>
+            <p>Your order has been confirmed. Here are the details:</p>
+            <ul>
+              ${orderItems.map(item => `
+                <li>
+                  <strong>${item.name}</strong> (${item.type}) - $${item.price} x ${item.quantity} = $${item.totalPrice}
+                </li>
+              `).join('')}
+            </ul>
+            <p>Total: $${subtotal}</p>
+            <p>Thank you for your purchase!</p>
+          </div>
+        `
       };
 
       await transporter.sendMail(mailOptions);
