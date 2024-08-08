@@ -11,11 +11,11 @@ export default function Home() {
     <div className="bg-white md:px-20">
       <Navbar />
       <div className="pt-24 flex flex-col gap-16 items-center px-4 md:px-8">
-        <div className="flex flex-col gap-6 items-center text-center max-w-3xl">
+        <div className="flex flex-col gap-6 items-center text-center">
           <h2 className="font-semibold text-4xl md:text-6xl text-gray-900 leading-snug">
             Innovative Event Management and Ticketing Made Easy
           </h2>
-          <p className="font-normal text-lg md:text-xl text-gray-600">
+          <p className="font-normal text-lg md:text-xl text-gray-600 max-w-3xl">
             Efficiently plan, promote, and execute your events while maximizing ticket sales with our platform designed for seamless event management.
           </p>
         </div>
@@ -95,12 +95,12 @@ export default function Home() {
             width={1024}
             height={682}
             alt="Mockup Image"
-            className="w-full lg:w-1/3 h-96 object-cover hidden md:inline-block"
+            className="absolute w-1/3 right-0 h-96 hidden md:inline-block"
           />
         </div>
       </div>
-      <div className="flex flex-col lg:flex-row py-24 gap-8 lg:gap-0 px-4 md:px-8 items-center lg:items-start">
-        <div className="flex flex-col gap-8 items-center text-center lg:text-left lg:items-start">
+      <div className="flex flex-col py-24 gap-8 lg:gap-0 px-4 md:px-8 items-center justify-center">
+        <div className="flex flex-col gap-8 items-center text-center">
           <p className="font-medium text-2xl md:text-5xl text-gray-900">Working with Epicurious has been a game-changer for us. The platform streamlined our event planning, and the support team was outstanding. We’re excited to use it for all our future events.</p>
           <div className="flex flex-col gap-1">
             <p className="font-semibold text-lg text-gray-900">Amélie Laurent</p>
@@ -109,7 +109,7 @@ export default function Home() {
         </div>
       </div>
       <div className="w-full flex flex-col lg:flex-row items-center py-24 px-4 md:px-8 gap-10">
-        <div className="lg:w-1/2 flex flex-col gap-10">
+        <div className="md:w-1/2 md:pr-3 flex flex-col gap-10">
           <h3 className="font-semibold text-3xl md:text-5xl text-gray-900 text-center lg:text-left">
             Sign up to start managing & selling tickets for your events effortlessly!
           </h3>
@@ -122,7 +122,7 @@ export default function Home() {
           width={1024}
           height={682}
           alt="Image"
-          className="w-full lg:w-1/2 object-cover"
+          className="w-1/2 absolute right-0 hidden md:inline-block"
         />
       </div>
       <div className="py-24 w-full px-4 md:px-8">

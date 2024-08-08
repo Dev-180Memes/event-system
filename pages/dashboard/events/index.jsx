@@ -5,6 +5,7 @@ import withAuth from '@/components/hoc/withAuth';
 import axios from 'axios';
 import formatDate from '@/utils/formatDate';
 import decodeToken from '@/utils/decodeToken';
+import Image from 'next/image';
 
 function capitalizeFirstLetter(string) {
   if (!string) return string;
@@ -80,14 +81,6 @@ const Events = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  if (!events.length) return (
-    <Layout>
-      <div className="w-full flex items-center justify-center h-[80vh]">
-        <p className="font-semibold text-xl text-gray-900">Loading...</p>
-      </div>
-    </Layout>
-  );
-
   return (
     <Layout>
       <div className="flex flex-col gap-6">
@@ -126,76 +119,101 @@ const Events = () => {
             </div>
           </div>
         </div>
-        <div className="w-full rounded-xl border border-gray-200 shadows">
-          <table className="w-full">
-            <thead>
-              <tr className='border-b border-gray-200'>
-                <th className='max-w-80 py-3 px-6  bg-none font-medium text-xs text-gray-600 text-left'>Name</th>
-                <th className="max-w-44 py-3 px-6  bg-gray-50 font-medium text-xs text-gray-600 text-left">Category</th>
-                <th className="max-w-36 py-3 px-6  bg-gray-50 font-medium text-xs text-gray-600 text-left">Date</th>
-                <th className="max-w-36 py-3 px-6  bg-gray-50 font-medium text-xs text-gray-600 text-left">Time</th>
-                <th className="max-w-16 py-3 px-6  bg-gray-50 invisible-content font-medium text-xs text-gray-600 text-left">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentEvents.map((event, index) => (
-                <tr className="border-b border-gray-200" key={event._id}>
-                  <td className="max-w-80 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.name}</td>
-                  <td className="max-w-44 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{capitalizeFirstLetter(event.category)}</td>
-                  <td className="max-w-36 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.formattedDate}</td>
-                  <td className="max-w-36 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.starttime}</td>
-                  <td className="max-w-16 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">
-                    <button className="flex items-center gap-2" onClick={() => toggleDropdown(index)}>
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
-                      </svg>
-                    </button>
-                    {openRowIndex === index && (
-                      <div className="absolute right-6 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg">
-                        <Link href={`/dashboard/events/${event._id}`} className="block py-0.5 px-1.5 hover:bg-gray-100">
-                          <div className="py-2 px-2.5">
-                            <p className="font-normal text-sm text-gray-600">View</p>
-                          </div>
-                        </Link>
-                        <Link href={''} className="block py-0.5 px-1.5 hover:bg-gray-100">
-                          <div className="py-2 px-2.5">
-                            <p className="font-normal text-sm text-gray-600">Edit</p>
-                          </div>
-                        </Link>
-                        <button className="flex py-0.5 px-1.5 hover:bg-gray-100 w-full items-start" onClick={() => handleDelete(index)}>
-                          <div className="py-2 px-2.5">
-                            <p className="font-normal text-sm text-red-600">Delete</p>
-                          </div>
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="w-full flex justify-between items-center border-t border-gray-200 pt-3 px-6 pb-4">
-            <p className="font-medium text-sm text-gray-700">
-              Page {currentPage} of {Math.ceil(filteredEvents.length / eventsPerPage)}
-            </p>
-            <div className="flex gap-3">
-              <button
-                className="rounded-lg border py-2 px-3.5 border-gray-300 shadow font-semibold text-sm text-gray-700"
-                onClick={() => paginate(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              <button
-                className="rounded-lg border py-2 px-3.5 border-gray-300 shadow font-semibold text-sm text-gray-700"
-                onClick={() => paginate(currentPage + 1)}
-                disabled={currentPage === Math.ceil(filteredEvents.length / eventsPerPage)}
-              >
-                Next
-              </button>
+        {events.length === 0 ? (
+          <div className="w-full flex items-center justify-center h-[80vh]">
+            <div className="flex flex-col gap-6 items-center">
+              <div className="flex flex-col gap-6 w-2/5 justify-center items-center">
+                <Image 
+                  src={'/Illustration.png'}
+                  alt="No events"
+                  width={200}
+                  height={200}
+                />
+                <div className="flex flex-col gap-2 justify-center">
+                  <h2 className="font-semibold text-center text-xl text-gray-900">No events found</h2>
+                  <p className="font-normal text-base text-gray-600 text-center">You haven't added any events to your schedule yet. It's the perfect time to start planning something amazing!</p>
+                </div>
+              </div>
+              <Link href={'/dashboard/events/create'} className='py-3 px-4 gap-2 rounded-lg bg-violet-600 h-fit border border-violet-600 shadow flex items-center'>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5 text-white">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                <p className='text-nowrap p-0 m-0 font-semibold text-sm text-white'>Create Event</p>
+              </Link>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="w-full rounded-xl border border-gray-200 shadows">
+            <table className="w-full">
+              <thead>
+                <tr className='border-b border-gray-200'>
+                  <th className='max-w-80 py-3 px-6  bg-none font-medium text-xs text-gray-600 text-left'>Name</th>
+                  <th className="max-w-44 py-3 px-6  bg-gray-50 font-medium text-xs text-gray-600 text-left">Category</th>
+                  <th className="max-w-36 py-3 px-6  bg-gray-50 font-medium text-xs text-gray-600 text-left">Date</th>
+                  <th className="max-w-36 py-3 px-6  bg-gray-50 font-medium text-xs text-gray-600 text-left">Time</th>
+                  <th className="max-w-16 py-3 px-6  bg-gray-50 invisible-content font-medium text-xs text-gray-600 text-left">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentEvents.map((event, index) => (
+                  <tr className="border-b border-gray-200" key={event._id}>
+                    <td className="max-w-80 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.name}</td>
+                    <td className="max-w-44 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{capitalizeFirstLetter(event.category)}</td>
+                    <td className="max-w-36 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.formattedDate}</td>
+                    <td className="max-w-36 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.starttime}</td>
+                    <td className="max-w-16 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">
+                      <button className="flex items-center gap-2" onClick={() => toggleDropdown(index)}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
+                        </svg>
+                      </button>
+                      {openRowIndex === index && (
+                        <div className="absolute right-6 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg">
+                          <Link href={`/dashboard/events/${event._id}`} className="block py-0.5 px-1.5 hover:bg-gray-100">
+                            <div className="py-2 px-2.5">
+                              <p className="font-normal text-sm text-gray-600">View</p>
+                            </div>
+                          </Link>
+                          <Link href={''} className="block py-0.5 px-1.5 hover:bg-gray-100">
+                            <div className="py-2 px-2.5">
+                              <p className="font-normal text-sm text-gray-600">Edit</p>
+                            </div>
+                          </Link>
+                          <button className="flex py-0.5 px-1.5 hover:bg-gray-100 w-full items-start" onClick={() => handleDelete(index)}>
+                            <div className="py-2 px-2.5">
+                              <p className="font-normal text-sm text-red-600">Delete</p>
+                            </div>
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="w-full flex justify-between items-center border-t border-gray-200 pt-3 px-6 pb-4">
+              <p className="font-medium text-sm text-gray-700">
+                Page {currentPage} of {Math.ceil(filteredEvents.length / eventsPerPage)}
+              </p>
+              <div className="flex gap-3">
+                <button
+                  className="rounded-lg border py-2 px-3.5 border-gray-300 shadow font-semibold text-sm text-gray-700"
+                  onClick={() => paginate(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+                <button
+                  className="rounded-lg border py-2 px-3.5 border-gray-300 shadow font-semibold text-sm text-gray-700"
+                  onClick={() => paginate(currentPage + 1)}
+                  disabled={currentPage === Math.ceil(filteredEvents.length / eventsPerPage)}
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {showDeleteModal && (

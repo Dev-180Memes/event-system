@@ -32,7 +32,7 @@ const Create = () => {
   const [imageurl, setImageUrl] = useState('');
   const [category, setCategory] = useState('');
   const [location, setLocation] = useState('');
-  const [timezone, setTimezone] = useState('');
+  const [timezone, setTimezone] = useState("Pacific Standard Time (PST)");
   const [frequency, setFrequency] = useState('');
   const [startdate, setStartDate] = useState('');
   const [enddate, setEndDate] = useState('');

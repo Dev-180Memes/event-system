@@ -32,8 +32,13 @@ const Sidebar = () => {
 
   const isActive = (path) => router.pathname === path;
 
-  // Check when routes that start with /dashboard/events are active
   const isActiveEvents = () => router.pathname.startsWith('/dashboard/events');
+
+  // Logout function
+  const logout = () => {
+    localStorage.removeItem('token');
+    router.push('/auth/login');
+  }
 
   return (
     <div className='w-[280px] bg-violet-700 flex flex-col justify-between h-screen fixed'>
@@ -84,7 +89,7 @@ const Sidebar = () => {
               <p className="text-violet-200 font-normal text-sm">{userDetail?.email.substring(0, 10)}...</p>
             </div>
           </div>
-          <button className='text-white'>
+          <button className='text-white' onClick={logout}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
             </svg>

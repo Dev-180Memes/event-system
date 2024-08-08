@@ -82,7 +82,7 @@ const Preview = () => {
                 </svg>
                 Edit
               </button>
-              {event.eventCode || publishedEvent.eventCode ? (
+              {event?.eventCode || publishedEvent?.eventCode ? (
                 <button 
                   className="rounded-lg border py-2.5 px-[18px] gap-2 bg-white border-gray-300 shadow font-semibold text-base text-gray-700 flex items-center w-full justify-center"
                   onClick={handleCopyLink}
@@ -280,7 +280,9 @@ const Preview = () => {
                 </button>
                 <button 
                   className="rounded-lg border py-2.5 px-[18px] bg-violet-600 border-violet-600 shadow font-semibold text-base text-white w-full"
-                  onClick={() => setShowPublishModal(false)}
+                  onClick={() => (
+                    router.push(`/dashboard/events/${publishedEvent._id}`)
+                  )}
                 >
                   Finish
                 </button>
