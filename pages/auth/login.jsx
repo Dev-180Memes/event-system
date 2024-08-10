@@ -33,7 +33,7 @@ const Login = () => {
   }
 
   return (
-    <div className='w-full h-[100vh] flex justify-center'>
+    <div className='w-full flex justify-center'>
       <div className='max-w-96 mt-14 flex flex-col gap-8'>
         <div className="flex flex-col items-center gap-6">
           <Link href={'/'}>
@@ -73,7 +73,7 @@ const Login = () => {
             <button type="submit" className="w-full rounded-lg bg-violet-600 py-2.5 px-4.5 border shadow font-semibold text-base text-white" onClick={handleSubmit}>Sign in</button>
           )}
         </form>
-        <div className="flex flex-row items-center justify-center gap-1">
+        <div className="flex flex-row items-center justify-center gap-1 mb-10">
           <p className="font-normal text-sm text-gray-600">Don’t have an account?</p>
           <Link 
             // Check if the url has a redirect query parameter and add it to the signup link

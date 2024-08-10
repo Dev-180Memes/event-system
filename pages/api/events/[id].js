@@ -55,6 +55,27 @@ export default async (req, res) => {
       console.error(error);
       res.status(500).send("Error updating event.");
     }
+  } else if(req.method === "DELETE") {
+    await connectDb();
+
+    const { id } = req.query;
+
+    if (!id) {
+      return res.status(400).send("Missing event ID.");
+    }
+
+    try {
+      const event = await Event.findByIdAndDelete(id);
+
+      if (!event) {
+        return res.status(404).send("Event not found.");
+      }
+
+      res.status(200).send("Event deleted.");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error deleting event.");
+    }
   } else {
     res.status(405).send(`Method ${req.method} not allowed.`);
   }

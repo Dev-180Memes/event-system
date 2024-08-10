@@ -6,6 +6,7 @@ import formatDate from '@/utils/formatDate';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
+import { set } from 'mongoose';
 
 const View = () => {
   const router = useRouter();
@@ -19,6 +20,7 @@ const View = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [eventTicketNumber, setEventTicketNumber] = useState(0);
 
   useEffect(() => {
     const fetchEventAndOrders = async () => {
@@ -28,6 +30,9 @@ const View = () => {
           axios.get(`/api/orders/event/${id}`)
         ]);
         setEvent(eventRes.data);
+        setEventTicketNumber(
+          eventRes.data.tickets.reduce((acc, ticket) => acc + ticket.quantity, 0)
+        );
         setOrders(ordersRes.data);
         setFilteredOrders(ordersRes.data);
       } catch (error) {
@@ -61,6 +66,8 @@ const View = () => {
       totalTicketsSold += item.quantity;
     });
   });
+
+  let totalTickets = eventTicketNumber + totalTicketsSold;
 
   const handleCopyLink = () => {
     const baseUrl = `${window.location.origin}`;
@@ -110,12 +117,12 @@ const View = () => {
                 </svg>
                 Share
               </button>
-              <button className="rounded-lg border border-violet-600 shadow py-2.5 px-4 bg-violet-600 gap-2 flex items-center text-white font-semibold text-sm">
+              <Link href={`/dashboard/events/edit/${event?._id}`} className="rounded-lg border border-violet-600 shadow py-2.5 px-4 bg-violet-600 gap-2 flex items-center text-white font-semibold text-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
                 </svg>
                 Edit
-              </button>
+              </Link>
             </div>
           </div>
           <div className="px-6 flex gap-5 items-center justify-center">
@@ -139,7 +146,7 @@ const View = () => {
             <div className="w-[1px] h-12 bg-gray-300 -rotate-0" />
             <div className="flex flex-col gap-0.5 text-center px-5">
               <p className="font-normal text-sm text-gray-600">Ticket Sales</p>
-              <h2 className="font-medium text-base text-gray-800">{totalTicketsSold}</h2>
+              <h2 className="font-medium text-base text-gray-800">{totalTicketsSold}/{totalTickets}</h2>
             </div>
             <div className="w-[1px] h-12 bg-gray-300 -rotate-0" />
             <div className="flex flex-col gap-0.5 text-center px-5">
@@ -218,7 +225,7 @@ const View = () => {
               <tbody>
                 {currentOrders.map((item, i) => (
                   <tr key={i} className='border-b border-gray-200'>
-                    <td className="py-4 px-6 font-normal text-sm text-gray-600 text-left max-w-[100px]">#{i + 1}</td>
+                    <td className="py-4 px-6 font-normal text-sm text-gray-600 text-left max-w-[100px]">#{(i + 1).toString().padStart(4, '0')}</td>
                     <td className="py-4 px-6 font-normal text-gray-600 text-left max-w-[270px] flex flex-col">
                       <p className="font-normal text-sm text-gray-900">{item.buyerName}</p>
                       <p className="font-normal text-sm text-gray-600">{item.buyerEmail}</p>

@@ -6,6 +6,7 @@ import axios from 'axios';
 import formatDate from '@/utils/formatDate';
 import decodeToken from '@/utils/decodeToken';
 import Image from 'next/image';
+import toast from 'react-hot-toast';
 
 function capitalizeFirstLetter(string) {
   if (!string) return string;
@@ -49,8 +50,8 @@ const Events = () => {
     setOpenRowIndex(openRowIndex === index ? null : index);
   };
 
-  const handleDelete = (index) => {
-    setDeleteId(index);
+  const handleDelete = (id) => {
+    setDeleteId(id);
     setOpenRowIndex(null);
     setShowDeleteModal(true);
   };
@@ -72,6 +73,23 @@ const Events = () => {
     }
 
     setFilteredEvents(filtered);
+  };
+
+  const deleteEvent = async (id) => {
+    try {
+      const response = await axios.delete(`/api/events/${id}`);
+      if (response.status === 200) {
+        const updatedEvents = events.filter(event => event._id !== id);
+        setEvents(updatedEvents);
+        setFilteredEvents(updatedEvents);
+        setShowDeleteModal(false);
+        setDeleteId(null);
+        toast.success('Event deleted successfully.');
+      }
+    } catch (error) {
+      console.error('Error deleting event:', error );
+      toast.error('An error occurred. Please try again.');
+    }
   };
 
   // Pagination Logic
@@ -149,6 +167,7 @@ const Events = () => {
                 <tr className='border-b border-gray-200'>
                   <th className='max-w-80 py-3 px-6  bg-none font-medium text-xs text-gray-600 text-left'>Name</th>
                   <th className="max-w-44 py-3 px-6  bg-gray-50 font-medium text-xs text-gray-600 text-left">Category</th>
+                  <th className="max-w-44 py-3 px-6  bg-gray-50 font-medium text-xs text-gray-600 text-left">Ticket Type</th>
                   <th className="max-w-36 py-3 px-6  bg-gray-50 font-medium text-xs text-gray-600 text-left">Date</th>
                   <th className="max-w-36 py-3 px-6  bg-gray-50 font-medium text-xs text-gray-600 text-left">Time</th>
                   <th className="max-w-16 py-3 px-6  bg-gray-50 invisible-content font-medium text-xs text-gray-600 text-left">Action</th>
@@ -159,6 +178,7 @@ const Events = () => {
                   <tr className="border-b border-gray-200" key={event._id}>
                     <td className="max-w-80 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.name}</td>
                     <td className="max-w-44 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{capitalizeFirstLetter(event.category)}</td>
+                    <td className="max-w-44 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.tickets.length === 1 ? "Single Ticket" : "Multiple Tickets"}</td>
                     <td className="max-w-36 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.formattedDate}</td>
                     <td className="max-w-36 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">{event.starttime}</td>
                     <td className="max-w-16 overflow-hidden py-4 px-6 font-normal text-sm text-gray-600 text-left">
@@ -174,12 +194,12 @@ const Events = () => {
                               <p className="font-normal text-sm text-gray-600">View</p>
                             </div>
                           </Link>
-                          <Link href={''} className="block py-0.5 px-1.5 hover:bg-gray-100">
+                          <Link href={`/dashboard/events/edit/${event._id}`} className="block py-0.5 px-1.5 hover:bg-gray-100">
                             <div className="py-2 px-2.5">
                               <p className="font-normal text-sm text-gray-600">Edit</p>
                             </div>
                           </Link>
-                          <button className="flex py-0.5 px-1.5 hover:bg-gray-100 w-full items-start" onClick={() => handleDelete(index)}>
+                          <button className="flex py-0.5 px-1.5 hover:bg-gray-100 w-full items-start" onClick={() => handleDelete(events[index]._id)}>
                             <div className="py-2 px-2.5">
                               <p className="font-normal text-sm text-red-600">Delete</p>
                             </div>
@@ -257,8 +277,8 @@ const Events = () => {
                 <button
                   className='rounded-lg bg-red-600 py-2.5 px-4 shadow font-semibold text-base text-white w-full'
                   onClick={() => {
-                    setShowDeleteModal(false);
-                    setDeleteId(null);
+                    // console.log('Deleting event:', deleteId);
+                    deleteEvent(deleteId);
                   }}
                 >
                   Delete
