@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import toast from 'react-hot-toast';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -28,7 +29,7 @@ const Login = () => {
       router.push(router.query.redirect ? router.query.redirect : '/dashboard');
     } else {
       const errorMessage = await response.text();
-      alert(errorMessage);
+      toast.error(errorMessage);
     }
   }
 
